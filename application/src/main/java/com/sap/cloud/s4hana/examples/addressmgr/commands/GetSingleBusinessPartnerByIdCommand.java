@@ -1,6 +1,7 @@
 package com.sap.cloud.s4hana.examples.addressmgr.commands;
 
 import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.BusinessPartnerAddress;
+import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.BusinessPartnerByKeyFluentHelper;
 import org.slf4j.Logger;
 
 import com.sap.cloud.sdk.cloudplatform.logging.CloudLoggerFactory;
@@ -20,6 +21,20 @@ public class GetSingleBusinessPartnerByIdCommand {
 
     public BusinessPartner execute() throws Exception {
         // TODO: Replace with Virtual Data Model query
-        return null;
+        return service.getBusinessPartnerByKey(id)
+                .select(BusinessPartner.BUSINESS_PARTNER,
+                        BusinessPartner.LAST_NAME,
+                        BusinessPartner.FIRST_NAME,
+                        BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS
+                        .select(BusinessPartnerAddress.BUSINESS_PARTNER,
+                                BusinessPartnerAddress.ADDRESS_ID,
+                                BusinessPartnerAddress.POSTAL_CODE,
+                                BusinessPartnerAddress.HOUSE_NUMBER,
+                                BusinessPartnerAddress.STREET_NAME,
+                                BusinessPartnerAddress.CITY_NAME,
+                                BusinessPartnerAddress.COUNTRY
+                        )
+                )
+                .execute();
     }
 }
